@@ -1,0 +1,109 @@
+.game-container {
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-columns: 20vw 1fr;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#table {
+  max-width: 70vh;
+  position: relative;
+  z-index: 1;
+}
+
+.table-seatings {
+  position: relative;
+  width: fit-content;
+  padding: 60px;
+}
+
+.seat-image {
+  width: 200px;
+  height: 200px;
+}
+
+.seat {
+  position: absolute;
+}
+
+.seat:nth-child(6) {
+  bottom: 0;
+  left: 100;
+}
+
+.seat:nth-child(5) {
+  bottom: 0;
+  right: 100;
+}
+
+.seat:nth-child(4) {
+  bottom: 350;
+  left: -50;
+}
+
+.seat:nth-child(3) {
+  top: -40;
+  left: 290;
+}
+.seat:nth-child(2) {
+  bottom: 350;
+  right: -50;
+}
+
+.tag {
+  position: absolute;
+
+  padding: 12px;
+  width: fit-content;
+  background-color: rgb(208, 204, 199);
+  box-shadow:
+    inset 0px 0px 10px 5px rgba(0, 0, 0, 0.219),
+    0px 10px 5px 0px rgba(0, 0, 0, 0.219);
+  border-radius: 8px;
+  color: rgb(41, 41, 41);
+  font-size: large;
+}
+
+.current-player {
+  border: 4px solid rgb(216, 0, 0);
+  transform: scale(1.1);
+}
+
+#hand-container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(0deg, rgb(248, 248, 248), rgba(255, 255, 255, 0));
+  height: 200px;
+  width: 100vw;
+  gap: 20px;
+}
+
+.card img {
+  width: 180px;
+}
+
+.card:hover {
+  cursor: pointer;
+}
+
+.side-game {
+  background-color: white;
+  box-shadow: 0px 10px 5px 0px rgba(0, 0, 0, 0.219);
+  justify-content: flex-start;
+}
+
+#recipe-card {
+  width: 75%;
+}
+
+.card-drawn {
+  width: 200px;
+}

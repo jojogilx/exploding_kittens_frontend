@@ -1,0 +1,86 @@
+@media screen and (orientation: landscape) and (max-height: 600px) {
+  .content {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #main-title {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  #cat-lighter {
+    min-width: 300px;
+    min-height: 300px;
+    max-height: 35vh;
+    object-fit: contain;
+    position: absolute;
+    right: 12;
+    bottom: 12;
+  }
+}
+
+@media screen and (orientation: landscape) and (min-height: 600px) {
+  .content {
+  }
+
+  #cat-lighter {
+    min-width: 400px;
+    min-height: 400px;
+    max-height: 55vh;
+    object-fit: contain;
+  }
+
+  .start-button {
+    order: 1;
+    align-self: center;
+    margin-top: 48px;
+  }
+}
+
+@media screen and (orientation: portrait) {
+  .content {
+    margin: 12px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #cat-lighter {
+    min-width: 300px;
+    min-height: 300px;
+    max-height: 35vh;
+    object-fit: contain;
+  }
+
+  .start-button {
+    order: 1;
+    align-self: center;
+    margin-top: 24px;
+  }
+}
+
+#edition {
+  color: white;
+  font-size: 30px;
+  font-family: cursive;
+}
+
+.fwIcons {
+  height: 35px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.start-button {
+  font-size: 34px;
+  padding: 10px 40px 10px 40px;
+  max-width: 300px;
+  max-height: fit-content;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
