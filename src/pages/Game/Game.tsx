@@ -7,6 +7,8 @@ import seatImage from "../../assets/images/Seat.svg";
 import Popup from "reactjs-popup";
 import tableImage from "../../assets/images/table.svg";
 import { getURL } from "../../utils";
+import { HandsComponent } from "./HandsComponent";
+import { PilesComponent } from "./PilesComponent";
 
 type PromptType =
     | "target_player"
@@ -16,6 +18,7 @@ type PromptType =
     | "garbage_collection";
 
 export function Game() {
+    const RADIUS = 300;
     const { roomName } = useParams();
     const [playersSeatings, setPlayersSeatings] = useState([] as Player[]);
 
@@ -100,6 +103,9 @@ export function Game() {
                     setRecipe(event.recipe as Recipe);
                     break;
                 case "information":
+                    setTimeout(() => {
+                        setInfo("");
+                    }, 3000);
                     setInfo(event.information);
                     break;
                 case "error":
@@ -186,7 +192,7 @@ export function Game() {
                         <div className="flex-row field-create">
                             <h5 className="label">
                                 Where do you want to bury{" "}
-                                {bury!.card ? bury?.card.name : "this card"}?
+                                {bury?.card ? bury?.card.name : "this card"}?
                             </h5>
                             <p>
                                 Choose an index from {bury!.min} to {bury!.max}
@@ -308,8 +314,15 @@ export function Game() {
             </div>
 
             <div className="game">
-                <PromptComponent />
+                {/* <PromptComponent /> */}
+                <div className="game-header">
+                    <p>{info}</p>
+                </div>
                 <div className="table-seatings overlay middle">
+                    <PilesComponent
+                        drawDeck={deckLength}
+                        lastPlayedCard={lastPlayedCard}
+                    />
                     <img src={tableImage} alt="" id="table" draggable="false" />
                     {playersSeatings.map(({ playerID, seat }) => {
                         return (
@@ -336,6 +349,7 @@ export function Game() {
                             </div>
                         );
                     })}
+                    <HandsComponent playersHands={playersHands} />
                 </div>
 
                 <div id="hand-container" className="flex-row">
@@ -354,11 +368,7 @@ export function Game() {
                                 onClick={() => handlePlayCard(i)}
                             >
                                 <img
-                                    src={getURL(
-                                        "./images/cards/",
-                                        c.name,
-                                        ".jpeg"
-                                    )}
+                                    src={getURL("cards/", c.name, ".jpeg")}
                                     alt=""
                                     className={"recipe-face"}
                                     draggable="false"

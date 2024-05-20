@@ -1,0 +1,6 @@
+{
+    "public": "dist",
+    "rewrites": [
+      { "source": "/assets/images/:path*", "destination": "/assets/images/:path*" }
+    ]
+  }

@@ -103,6 +103,23 @@ export const RoomList = () => {
             });
     };
 
+    const handleResetRoom = (roomName: String) => {
+        const url = "http://127.0.0.1:8080/reset/" + roomName;
+
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+        };
+
+        fetch(url, requestOptions)
+            .then((_) => {
+                console.log("Room reset successfully");
+            })
+            .catch((error) => {
+                console.error("Error resetting room:", error);
+            });
+    };
+
     const CreateRoomPopup = memo(() => {
         return (
             <Popup
@@ -226,6 +243,15 @@ export const RoomList = () => {
                                         </span>{" "}
                                         {r.players.toString()}
                                     </span>
+                                    <button
+                                        className="flame-button"
+                                        id="join-button"
+                                        onClick={() => {
+                                            handleResetRoom(r.name);
+                                        }}
+                                    >
+                                        RESET (DEV)
+                                    </button>
                                     <button
                                         className="flame-button"
                                         id="join-button"

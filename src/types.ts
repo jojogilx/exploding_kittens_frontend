@@ -11,7 +11,7 @@ export type Player = {
 };
 
 export type HandCount = {
-  hiddent: number;
+  hidden: number;
   shown: Card[];
 };
 
