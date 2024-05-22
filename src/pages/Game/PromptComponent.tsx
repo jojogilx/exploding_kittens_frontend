@@ -1,20 +1,45 @@
 import { useEffect, useState } from "react";
 import { Bury, Card, PromptType } from "../../types";
 import { getURL } from "../../utils";
+import { Draggable } from "react-drag-reorder";
+import { arrayMoveImmutable } from "array-move";
 
 type Props = {
     prompt: PromptType | null;
     submitPrompt: (s: string) => void;
 };
 
+type Wrapper = { card: Card; index: number };
+
 export function PromptComponent({ prompt, submitPrompt }: Props) {
+    const [nextcards, setNextCards] = useState([] as Wrapper[]);
+
+    useEffect(() => {
+        if (prompt?.event === "alter_the_future") {
+            const wrapped = prompt.next_cards.map(
+                (card, index) => ({ card: card, index } as Wrapper)
+            );
+            setNextCards(wrapped);
+        }
+    }, [prompt]);
+
     useEffect(() => {
         console.log("prompt", prompt);
     }, [prompt]);
 
     const [answer, setAnswer] = useState("");
-    const [dragIndex, setDragIndex] = useState<number | null>(null);
-    const [cards, setCard] = useState<Card[] | null>(null);
+
+    const getChangedPos = (currentPos: number, newPos: number) => {
+        console.log(currentPos, newPos);
+        setNextCards(arrayMoveImmutable(nextcards, currentPos, newPos));
+    };
+
+    useEffect(() => {
+        console.log(
+            "next cards are ",
+            nextcards.map((a) => a.card.name)
+        );
+    }, [nextcards]);
 
     function getPromptDescription() {
         switch (prompt?.event) {
@@ -94,16 +119,22 @@ export function PromptComponent({ prompt, submitPrompt }: Props) {
                 );
             case "alter_the_future":
                 return (
-                    <ul className="flex-row">
-                        {prompt.next_cards.map((card, index) => (
-                            <li key={index} className={`next-cards`}>
-                                <img
-                                    src={getURL("cards/", card.name, ".jpeg")}
-                                    alt=""
-                                />
-                            </li>
-                        ))}
-                    </ul>
+                    <div className="flex-row" id="drag">
+                        <Draggable onPosChange={getChangedPos}>
+                            {nextcards.map(({ card, index }) => (
+                                <div key={index} className={`next-cards`}>
+                                    <img
+                                        src={getURL(
+                                            "cards/",
+                                            card.name,
+                                            ".jpeg"
+                                        )}
+                                        alt=""
+                                    />
+                                </div>
+                            ))}
+                        </Draggable>
+                    </div>
                 );
         }
     }
