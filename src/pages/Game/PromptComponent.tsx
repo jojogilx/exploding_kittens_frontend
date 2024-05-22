@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Bury, Card, PromptType } from "../../types";
 import { getURL } from "../../utils";
 import { Draggable } from "react-drag-reorder";
@@ -12,10 +12,27 @@ type Props = {
 type Wrapper = { card: Card; index: number };
 
 export function PromptComponent({ prompt, submitPrompt }: Props) {
+    const cards = [
+        {
+            card: { name: "nope", description: "" } as Card,
+            index: 0,
+        } as Wrapper,
+        {
+            card: { name: "alter the future (3X)", description: "" } as Card,
+            index: 1,
+        } as Wrapper,
+        {
+            card: { name: "defuse", description: "" } as Card,
+            index: 2,
+        } as Wrapper,
+    ];
+
     const [nextcards, setNextCards] = useState([] as Wrapper[]);
 
     useEffect(() => {
+        setNextCards(cards);
         if (prompt?.event === "alter_the_future") {
+            console.log("here lol");
             const wrapped = prompt.next_cards.map(
                 (card, index) => ({ card: card, index } as Wrapper)
             );
@@ -30,14 +47,43 @@ export function PromptComponent({ prompt, submitPrompt }: Props) {
     const [answer, setAnswer] = useState("");
 
     const getChangedPos = (currentPos: number, newPos: number) => {
-        console.log(currentPos, newPos);
-        setNextCards(arrayMoveImmutable(nextcards, currentPos, newPos));
+        const newcards = arrayMoveImmutable(nextcards, currentPos, newPos);
+        setNextCards(newcards);
+        const positions = nextcards
+            .map(({ index }) => index.toString())
+            .join("");
+        setAnswer(positions);
     };
 
     useEffect(() => {
         console.log(
             "next cards are ",
             nextcards.map((a) => a.card.name)
+        );
+    }, [nextcards]);
+
+    const DraggableRender = useCallback(() => {
+        return (
+            <>
+                <div className="flex-row" id="drag">
+                    <Draggable onPosChange={getChangedPos}>
+                        {nextcards.map(({ card }) => (
+                            <div key={card.name} className={`next-cards`}>
+                                <img
+                                    src={getURL("cards/", card.name, ".jpeg")}
+                                    alt=""
+                                />
+                            </div>
+                        ))}
+                    </Draggable>
+                </div>
+                <button
+                    onClick={() => submitPrompt(answer)}
+                    className="flame-button"
+                >
+                    Submit
+                </button>
+            </>
         );
     }, [nextcards]);
 
@@ -118,24 +164,7 @@ export function PromptComponent({ prompt, submitPrompt }: Props) {
                     </ul>
                 );
             case "alter_the_future":
-                return (
-                    <div className="flex-row" id="drag">
-                        <Draggable onPosChange={getChangedPos}>
-                            {nextcards.map(({ card, index }) => (
-                                <div key={index} className={`next-cards`}>
-                                    <img
-                                        src={getURL(
-                                            "cards/",
-                                            card.name,
-                                            ".jpeg"
-                                        )}
-                                        alt=""
-                                    />
-                                </div>
-                            ))}
-                        </Draggable>
-                    </div>
-                );
+                return <DraggableRender />;
         }
     }
 

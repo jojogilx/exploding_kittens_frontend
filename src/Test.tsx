@@ -30,17 +30,22 @@ export const Test = () => {
     }, [cards]);
 
     return (
-        <div className="flex-row" id="drag">
-            <Draggable onPosChange={getChangedPos}>
-                {cards.map((card, index) => (
-                    <div key={index} className={`next-cards`}>
-                        <img
-                            src={getURL("cards/", card.card.name, ".jpeg")}
-                            alt=""
-                        />
-                    </div>
-                ))}
-            </Draggable>
+        <div className="popup">
+            <h3>ALTER THE FUTURE</h3>
+            <p>Drag to Reorder</p>
+
+            <div className="flex-row" id="drag">
+                <Draggable onPosChange={getChangedPos}>
+                    {cards.map((card, index) => (
+                        <div key={index} className={`next-cards`}>
+                            <img
+                                src={getURL("cards/", card.card.name, ".jpeg")}
+                                alt=""
+                            />
+                        </div>
+                    ))}
+                </Draggable>
+            </div>
         </div>
     );
 };
