@@ -1,21 +1,24 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Recipe, RoomEvent, Card, Player, Bury, HandCount } from "../../types";
+import {
+    Recipe,
+    RoomEvent,
+    Card,
+    Player,
+    Bury,
+    HandCount,
+    PromptType,
+} from "../../types";
 import "./Game.css";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import seatImage from "../../assets/images/Seat.svg";
 import Popup from "reactjs-popup";
 import tableImage from "../../assets/images/table.svg";
 import { getURL } from "../../utils";
-import { HandsComponent } from "./HandsComponent";
+import { HandsComponent } from "./PlayerHandsComponent";
 import { PilesComponent } from "./PilesComponent";
-
-type PromptType =
-    | "target_player"
-    | "bury_card"
-    | "choose_card"
-    | "alter_the_future"
-    | "garbage_collection";
+import { PromptComponent } from "./PromptComponent";
+import { HandComponent } from "./HandComponent";
 
 export function Game() {
     const RADIUS = 300;
@@ -45,6 +48,8 @@ export function Game() {
     const user = localStorage.getItem("userId");
 
     const [bury, setBury] = useState<Bury | null>(null);
+
+    const [noping, setNoping] = useState(false);
 
     const WS_PLAYER_ROOM =
         "ws://127.0.0.1:8080/join/" + roomName?.trim() + "/" + user;
@@ -140,7 +145,7 @@ export function Game() {
                     // trigger defuse animation
                     break;
                 case "target_player":
-                    setPrompt("target_player");
+                    setPrompt(event);
                     break;
                 case "bury_card": //todo change
                     setBury({
@@ -148,19 +153,25 @@ export function Game() {
                         min: event.min,
                         max: event.max,
                     });
-                    setPrompt("bury_card");
+                    setPrompt(event);
                     break;
                 case "garbage_collection":
-                    setPrompt("garbage_collection");
+                    setPrompt(event);
                     break;
                 case "alter_the_future":
-                    setPrompt("alter_the_future");
+                    setPrompt(event);
                     break;
                 case "see_the_future":
                     //todo trigger  cards overlay
                     break;
                 case "choose_card":
-                    setPrompt("choose_card");
+                    setPrompt(event);
+                    break;
+                case "nope_card":
+                    setNoping(true);
+                    break;
+                case "end_nope":
+                    setNoping(false);
                     break;
                 default:
                     break;
@@ -170,46 +181,8 @@ export function Game() {
         }
     }, [lastJsonMessage]);
 
-    const handleSkip = () => {
-        sendMessage("n");
-    };
-
     const notifyBackendOnUnload = () => {
         sendMessage("left");
-    };
-
-    const PromptComponent = () => {
-        return (
-            <Popup
-                open={prompt !== null}
-                onClose={() => {
-                    setPrompt(null);
-                }}
-            >
-                <div className="popup">
-                    <h3>BURY CARD</h3>
-                    <div>
-                        <div className="flex-row field-create">
-                            <h5 className="label">
-                                Where do you want to bury{" "}
-                                {bury?.card ? bury?.card.name : "this card"}?
-                            </h5>
-                            <p>
-                                Choose an index from {bury!.min} to {bury!.max}
-                            </p>
-                            <input
-                                type="text"
-                                min={bury!.min}
-                                max={bury!.max}
-                                placeholder="Index..."
-                                className="input pop2"
-                                onChange={() => {}}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </Popup>
-        );
     };
 
     const handleStart = () => {
@@ -239,13 +212,9 @@ export function Game() {
 
     window.addEventListener("beforeunload", notifyBackendOnUnload);
 
-    const handlePlayCard = (i: number) => {
-        if (user !== currentPlayer) return;
-
-        sendMessage(i.toString());
-
-        const cards = hand.filter((_, ind) => i !== ind);
-        setHand(cards);
+    const handleSubmitPrompt = (response: string) => {
+        sendMessage(response);
+        setPrompt(null);
     };
 
     return (
@@ -314,7 +283,10 @@ export function Game() {
             </div>
 
             <div className="game">
-                {/* <PromptComponent /> */}
+                <PromptComponent
+                    prompt={prompt}
+                    submitPrompt={handleSubmitPrompt}
+                />
                 <div className="game-header">
                     <p>{info}</p>
                 </div>
@@ -352,36 +324,13 @@ export function Game() {
                     <HandsComponent playersHands={playersHands} />
                 </div>
 
-                <div id="hand-container" className="flex-row">
-                    {info && (
-                        <div className="header-information">
-                            Information: {info}
-                        </div>
-                    )}
-                    {hand.map((c, i) => {
-                        return (
-                            <div
-                                className={
-                                    "card" +
-                                    (user === currentPlayer ? "" : " grey")
-                                }
-                                onClick={() => handlePlayCard(i)}
-                            >
-                                <img
-                                    src={getURL("cards/", c.name, ".jpeg")}
-                                    alt=""
-                                    className={"recipe-face"}
-                                    draggable="false"
-                                />
-                            </div>
-                        );
-                    })}
-                    {user === currentPlayer ? (
-                        <button onClick={() => handleSkip()}>Skip</button>
-                    ) : (
-                        <></>
-                    )}
-                </div>
+                <HandComponent
+                    hand={hand}
+                    setHand={setHand}
+                    send={sendMessage}
+                    currentPlayer={currentPlayer}
+                    noping={noping}
+                />
             </div>
         </div>
     );
