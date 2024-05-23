@@ -5,23 +5,22 @@ import {
     RoomEvent,
     Card,
     Player,
-    Bury,
     HandCount,
     PromptType,
+    OverlayType,
 } from "../../types";
 import "./Game.css";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import seatImage from "../../assets/images/Seat.svg";
-import Popup from "reactjs-popup";
 import tableImage from "../../assets/images/table.svg";
 import { getURL } from "../../utils";
 import { HandsComponent } from "./PlayerHandsComponent";
 import { PilesComponent } from "./PilesComponent";
 import { PromptComponent } from "./PromptComponent";
 import { HandComponent } from "./HandComponent";
+import { OverlayComponent } from "./OverlayComponent";
 
 export function Game() {
-    const RADIUS = 300;
     const { roomName } = useParams();
     const [playersSeatings, setPlayersSeatings] = useState([] as Player[]);
 
@@ -31,14 +30,15 @@ export function Game() {
 
     const [hand, setHand] = useState([] as Card[]);
     const [drawnCard, setDrawnCard] = useState<Card | null>(null);
-    const [showDrawnCard, setShowDrawnCard] = useState(false);
     const [prompt, setPrompt] = useState<null | PromptType>(null);
+    const [overlay, setOverlay] = useState<null | OverlayType>(null);
 
     const [currentPlayer, setCurrentPlayer] = useState("");
     const [info, setInfo] = useState("");
     const [error, setError] = useState("");
 
     const [winner, setWinner] = useState("");
+    const [died, setDied] = useState("");
 
     const [deckLength, setDeckLength] = useState(0);
     const [lastPlayedCard, setLastPlayedCard] = useState<Card | null>(null);
@@ -47,9 +47,8 @@ export function Game() {
 
     const user = localStorage.getItem("userId");
 
-    const [bury, setBury] = useState<Bury | null>(null);
-
     const [noping, setNoping] = useState(false);
+    const [canPlay, setCanPlay] = useState(false);
 
     const WS_PLAYER_ROOM =
         "ws://127.0.0.1:8080/join/" + roomName?.trim() + "/" + user;
@@ -62,7 +61,6 @@ export function Game() {
         }
     );
 
-    // Connection status monitoring
     useEffect(() => {
         switch (readyState) {
             case ReadyState.CONNECTING:
@@ -76,13 +74,15 @@ export function Game() {
                 break;
             case ReadyState.CLOSED:
                 console.log("WebSocket closed");
-                // Additional actions after the connection is closed
-                // reconnect logic here if needed
                 break;
             default:
                 break;
         }
     }, [readyState]);
+
+    // useEffect(() => {
+    //     window.alert(error);
+    // }, [error]);
 
     useEffect(() => {
         try {
@@ -121,9 +121,17 @@ export function Game() {
                     break;
                 case "winner":
                     setWinner(event.player);
+                    setOverlay(event);
                     break;
                 case "died":
                     // triggerOverlay(event.player); TODO
+                    setTimeout(() => {
+                        setDied("");
+                        setOverlay(null);
+                    }, 3000);
+                    setDied(event.player);
+                    setOverlay(event);
+
                     break;
                 case "hand":
                     setHand(event.player_hand);
@@ -139,8 +147,10 @@ export function Game() {
 
                     setTimeout(() => {
                         setDrawnCard(null);
+                        setOverlay(null);
                     }, 3000);
                     setDrawnCard(card);
+                    setOverlay(event);
 
                     //trigger exploding overlay TODO
                     break;
@@ -152,11 +162,6 @@ export function Game() {
                     setPrompt(event);
                     break;
                 case "bury_card": //todo change
-                    setBury({
-                        card: event.card,
-                        min: event.min,
-                        max: event.max,
-                    });
                     setPrompt(event);
                     break;
                 case "garbage_collection":
@@ -167,6 +172,10 @@ export function Game() {
                     break;
                 case "see_the_future":
                     //todo trigger  cards overlay
+                    setTimeout(() => {
+                        setPrompt(null);
+                    }, 3000);
+                    setPrompt(event);
                     break;
                 case "choose_card":
                     setPrompt(event);
@@ -223,17 +232,7 @@ export function Game() {
 
     return (
         <div className="game-container">
-            {drawnCard && (
-                <div className="shadow overlay middle" id="drawn-card-shadow">
-                    <h3>DRAWN CARD</h3>
-                    <img
-                        src={getURL("cards/", drawnCard!.name, ".svg", ".jpeg")}
-                        alt=""
-                        className="card-drawn"
-                        draggable="false"
-                    />
-                </div>
-            )}
+            <OverlayComponent overlay={overlay} />
 
             <div className="game">
                 <PromptComponent
@@ -241,11 +240,11 @@ export function Game() {
                     submitPrompt={handleSubmitPrompt}
                 />
                 <div id="game-header">
-                    <p>
+                    <span>
                         <strong>Recipe: </strong>
                         {recipe?.name}
-                    </p>
-                    <p>{info}</p>
+                    </span>
+                    <span>{info}</span>
                 </div>
                 <div className="table-seatings overlay middle">
                     {!isStarted ? (
@@ -287,22 +286,16 @@ export function Game() {
                                         draggable="false"
                                     />
 
-                                    <div
-                                        className={
-                                            "tag " +
-                                            (currentPlayer === playerID
-                                                ? "current-player"
-                                                : "")
-                                        }
-                                    >
-                                        {playerID}
-                                    </div>
+                                    <HandsComponent
+                                        playersHands={playersHands}
+                                        player={playerID}
+                                        currentPlayer={currentPlayer}
+                                    />
                                 </div>
                             </div>
                         );
                     })}
                     <img src={tableImage} alt="" id="table" draggable="false" />
-                    <HandsComponent playersHands={playersHands} />
                 </div>
 
                 <HandComponent

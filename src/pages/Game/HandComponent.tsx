@@ -1,6 +1,7 @@
-import { Card } from "../../types";
+import { Card, Wrapper } from "../../types";
 import { getURL } from "../../utils";
 import bomb from "../../assets/images/cards/explodingkitten.svg";
+import { useEffect, useState } from "react";
 
 type Props = {
     hand: Card[];
@@ -18,6 +19,7 @@ export function HandComponent({
     noping,
 }: Props) {
     const user = localStorage.getItem("userId");
+    const [cards, setCards] = useState([] as Wrapper[][]);
 
     const canPlay = (card: Card) => {
         return (
@@ -37,39 +39,69 @@ export function HandComponent({
         setHand(cards);
     };
 
+    useEffect(() => {
+        console.log(JSON.stringify(hand));
+        const wrapped = hand.map(
+            (card, index) => ({ card: card, index } as Wrapper)
+        );
+
+        const grouped = wrapped.reduce((acc, { card, index }) => {
+            if (!acc[card.name]) {
+                acc[card.name] = [];
+            }
+            acc[card.name].push({ card, index });
+            return acc;
+        }, {} as { [key: string]: Wrapper[] });
+
+        const result = Object.values(grouped);
+
+        setCards(result);
+    }, [hand]);
+
     const handleSkip = () => {
         send("n");
     };
 
     return (
         <div id="hand-container" className="flex-row">
-            {hand.map((c, i) => {
-                return (
-                    <div
-                        className={
-                            "card" +
-                            (user === currentPlayer ||
-                            (noping && c.name.trim().toLowerCase() == "nope")
-                                ? ""
-                                : " grey")
-                        }
-                        onClick={() => handlePlayCard(c, i)}
-                    >
-                        <img
-                            src={getURL("cards/", c.name, ".svg", ".jpeg")}
-                            alt=""
-                            className={"recipe-face"}
-                            draggable="false"
-                        />
-                        {/* <img
+            {cards.map((w) => (
+                <div className="flex-column" id="hand-column">
+                    {w.map(({ card, index }) => {
+                        return (
+                            <div
+                                className={
+                                    "card " +
+                                    (user === currentPlayer ||
+                                    (noping &&
+                                        card.name.trim().toLowerCase() ==
+                                            "nope")
+                                        ? ""
+                                        : " grey")
+                                }
+                                onClick={() => handlePlayCard(card, index)}
+                            >
+                                <img
+                                    src={getURL(
+                                        "cards/",
+                                        card.name,
+                                        ".svg",
+                                        ".jpeg"
+                                    )}
+                                    alt=""
+                                    className={"recipe-face"}
+                                    draggable="false"
+                                />
+                                {/* <img
                             src={bomb}
                             alt=""
                             className={"recipe-face"}
                             draggable="false"
                         /> */}
-                    </div>
-                );
-            })}
+                            </div>
+                        );
+                    })}
+                </div>
+            ))}
             {user === currentPlayer ? (
                 <button onClick={() => handleSkip()}>Skip</button>
             ) : (

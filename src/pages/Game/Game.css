@@ -41,6 +41,7 @@ position: relative;
 }
 
 .seat { 
+  z-index: 0;
   position: absolute;
   top: 0;
   left: 50%;
@@ -63,7 +64,7 @@ position: relative;
 .tag {
   position: absolute;
 
-  padding: 12px;
+
   width: fit-content;
   background-color: rgb(208, 204, 199);
   box-shadow:
@@ -72,6 +73,19 @@ position: relative;
   border-radius: 8px;
   color: rgb(41, 41, 41);
   font-size: large;
+}
+
+.player-tag {
+  position: absolute;
+  top: 0;
+  z-index: 4;
+  top: 0%;
+  left: 0%;
+  transform: translate(-50%,50%);
+
+  background-color: #e0f9fd9c;
+  padding: 12px;
+  border-radius: 8px;
 }
 
 .current-player {
@@ -87,7 +101,7 @@ position: relative;
   height: 200px;
   width: 100vw;
   gap: 0px;
-  z-index: 10;
+  z-index: 1000;
 }
 
 .card img {
@@ -127,27 +141,21 @@ position: relative;
   padding-left: 35px;
 }
 
-.player-tag {
-  position: absolute;
-  top: 0;
 
-  background-color: #e0f9fd9c;
-  padding: 12px;
-  border-radius: 8px;
-}
 
 #game-header {
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.63), rgba(0, 0, 0, 0));
-
+  z-index: 2000;
   width:100%;
   position: absolute;
   top: 0;
   display: grid;
   grid-template-columns: 100px 1f;
+  grid-template-rows: 1fr;
   
 }
 
-#game-header p {
+#game-header span {
   color: white;
   padding: 14px;
   margin: 10PX;
@@ -156,7 +164,7 @@ position: relative;
 
 .decks {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   top: 45%;
   left: 43%;
   display: flex;
@@ -192,9 +200,6 @@ position: relative;
 
 }
 
-.popup {
-  max-width: 600px;
-}
 
 .hands {
   position: absolute;
@@ -203,7 +208,7 @@ position: relative;
 
 #drawn-card-shadow{
   position: absolute;
-  z-index: 1000;
+  z-index: 4000;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.478);
@@ -224,7 +229,20 @@ position: relative;
 #start-button {
   position: absolute;
   left: 50%;
-  z-index: 9000;
+  z-index: 2001;
   top: 50%;
   transform: translate(-50%,-50%);
 }
+
+.prompt{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  max-width: 600px;
+}
+
+#hand-column .card{
+ margin-top: -200px;
+}
+

@@ -1,51 +1,60 @@
 import VirtualList from "react-virtual-drag-list";
 import { PromptComponent } from "./pages/Game/PromptComponent";
-import { Card } from "./types";
+import { Card, Wrapper } from "./types";
 import { getURL } from "./utils";
 import { useEffect, useState } from "react";
 import { Draggable } from "react-drag-reorder";
 import { arrayMoveImmutable } from "array-move";
-
-type Wrapper = { card: Card; id: number };
-
+import "./Test.css";
 export const Test = () => {
-    const [cards, setCards] = useState([
-        { card: { name: "nope", description: "" } as Card, id: 0 } as Wrapper,
-        {
-            card: { name: "alter the future (3X)", description: "" } as Card,
-            id: 1,
-        } as Wrapper,
-        { card: { name: "defuse", description: "" } as Card, id: 2 } as Wrapper,
-    ]);
+    const handJson =
+        '[{"name":"Reverse","description":"Reverse the order of play and end your turn without drawing a card"},{"name":"Skip","description":"End turn without drawing a card"},{"name":"Nope","description":"Stop the action of another player. You can play this at any time"},{"name":"Shuffle","description":"Shuffle the draw pile"},{"name":"Nope","description":"Stop the action of another player. You can play this at any time"},{"name":"Skip","description":"End turn without drawing a card"},{"name":"Alter The Future (3X)","description":"Privately view and rearrange the top three cards of the draw pile"},{"name":"Defuse","description":"Instead of exploding, put your last drawn card back into the deck"}]';
 
-    const getChangedPos = (currentPos: number, newPos: number) => {
-        console.log(currentPos, newPos);
-
-        const newcards = arrayMoveImmutable(cards, currentPos, newPos);
-        setCards(newcards);
-    };
+    const [cards, setCards] = useState([] as Wrapper[][]);
 
     useEffect(() => {
-        console.log(cards.map((a) => a.card.name));
-    }, [cards]);
+        const hand = JSON.parse(handJson) as Card[];
+
+        const wrapped = hand.map(
+            (card, index) => ({ card: card, index } as Wrapper)
+        );
+
+        const grouped = wrapped.reduce((acc, { card, index }) => {
+            if (!acc[card.name]) {
+                acc[card.name] = [];
+            }
+            acc[card.name].push({ card, index });
+            return acc;
+        }, {} as { [key: string]: Wrapper[] });
+
+        const result = Object.values(grouped);
+
+        setCards(result);
+    }, []);
 
     return (
-        <div className="popup">
-            <h3>ALTER THE FUTURE</h3>
-            <p>Drag to Reorder</p>
-
-            <div className="flex-row" id="drag">
-                <Draggable onPosChange={getChangedPos}>
-                    {cards.map((card, index) => (
-                        <div key={index} className={`next-cards`}>
-                            <img
-                                src={getURL("cards/", card.card.name, ".jpeg")}
-                                alt=""
-                            />
-                        </div>
-                    ))}
-                </Draggable>
-            </div>
+        <div id="hand-container2" className="flex-row">
+            {cards.map((w) => (
+                <div className="flex-column" id="hand-column">
+                    {w.map(({ card, index }) => {
+                        return (
+                            <div className="card">
+                                <img
+                                    src={getURL(
+                                        "cards/",
+                                        card.name,
+                                        ".svg",
+                                        ".jpeg"
+                                    )}
+                                    alt=""
+                                    className={"recipe-face"}
+                                    draggable="false"
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+            ))}
         </div>
     );
 };

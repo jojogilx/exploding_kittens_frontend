@@ -55,12 +55,19 @@ export type RoomEvent =
   | { event: "end_nope"; cards: Card[] }
   ;
 
-export type Bury = { min: number; max: number; card?: Card };
-
 
 export type PromptType =
   | { event: "target_player"; players: string[] }
   | { event: "bury_card"; card?: Card; min: number; max: number }
   | { event: "choose_card"; cards: Card[] }
   | { event: "alter_the_future"; next_cards: Card[] }
+  | { event: "see_the_future"; cards: Card[] }
   | { event: "garbage_collection" };
+
+export type OverlayType =
+  | { event: "died"; player: string }
+  | { event: "draw_card"; card: Card }
+  | { event: "winner"; player: string }
+  ;
+
+export type Wrapper = { card: Card; index: number };

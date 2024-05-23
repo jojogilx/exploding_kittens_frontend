@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Bury, Card, PromptType } from "../../types";
+import { Card, PromptType, Wrapper } from "../../types";
 import { getURL } from "../../utils";
 import { Draggable } from "react-drag-reorder";
 import { arrayMoveImmutable } from "array-move";
@@ -8,8 +8,6 @@ type Props = {
     prompt: PromptType | null;
     submitPrompt: (s: string) => void;
 };
-
-type Wrapper = { card: Card; index: number };
 
 export function PromptComponent({ prompt, submitPrompt }: Props) {
     const cards = [
@@ -107,7 +105,7 @@ export function PromptComponent({ prompt, submitPrompt }: Props) {
             case "garbage_collection":
                 return `Choose a card to shuffle back into the deck`;
             default:
-                break;
+                return <></>;
         }
     }
 
@@ -175,12 +173,30 @@ export function PromptComponent({ prompt, submitPrompt }: Props) {
                 );
             case "alter_the_future":
                 return <DraggableRender />;
+            case "see_the_future":
+                return (
+                    <ul className="flex-row">
+                        {prompt.cards.map((card, index) => (
+                            <li key={index} className={`next-cards`}>
+                                <img
+                                    src={getURL(
+                                        "cards/",
+                                        card.name,
+                                        ".svg",
+                                        ".jpeg"
+                                    )}
+                                    alt=""
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                );
         }
     }
 
     return (
         prompt && (
-            <div className="popup">
+            <div className="prompt popup">
                 <h3>{prompt?.event.split("_").join(" ").toUpperCase()}</h3>
                 <p>{getPromptDescription()}</p>
                 {getBody()}

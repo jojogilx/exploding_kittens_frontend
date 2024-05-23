@@ -1,0 +1,12 @@
+
+#hand-container2 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(0deg, rgb(248, 248, 248), rgba(255, 255, 255, 0));
+    height: 200px;
+    width: 100%;
+    gap: 0px;
+    z-index: 1000;
+    flex-flow: row;
+  }
