@@ -1,4 +1,4 @@
-import cardback from "../../assets/images/cards/CardBack.svg";
+import cardback from "../../assets/images/cards/back.svg";
 import { getURL } from "../../utils";
 import { useEffect } from "react";
 import { Card } from "../../types";
@@ -23,7 +23,7 @@ export function PilesComponent({ drawDeck, lastPlayedCard }: Props) {
             )}
             {lastPlayedCard && (
                 <img
-                    src={getURL("cards/", lastPlayedCard.name, ".jpeg")}
+                    src={getURL("cards/", lastPlayedCard.name, ".svg", ".jpeg")}
                     alt=""
                     id="last-played"
                 />

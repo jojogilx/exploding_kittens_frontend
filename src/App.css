@@ -215,3 +215,7 @@ button:hover {
   align-items: center;
   z-index: 2000;
 }
+
+.wrap {
+  flex-wrap: wrap;
+}

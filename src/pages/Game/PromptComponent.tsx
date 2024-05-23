@@ -70,7 +70,12 @@ export function PromptComponent({ prompt, submitPrompt }: Props) {
                         {nextcards.map(({ card }) => (
                             <div key={card.name} className={`next-cards`}>
                                 <img
-                                    src={getURL("cards/", card.name, ".jpeg")}
+                                    src={getURL(
+                                        "cards/",
+                                        card.name,
+                                        ".svg",
+                                        ".jpeg"
+                                    )}
                                     alt=""
                                 />
                             </div>
@@ -148,7 +153,7 @@ export function PromptComponent({ prompt, submitPrompt }: Props) {
                 );
             case "choose_card" || "garbage_collection":
                 return (
-                    <ul className="flex-row">
+                    <ul className="flex-row wrap">
                         {prompt.cards.map((card, index) => (
                             <li
                                 key={index}
@@ -156,7 +161,12 @@ export function PromptComponent({ prompt, submitPrompt }: Props) {
                                 onClick={() => submitPrompt(index.toString())}
                             >
                                 <img
-                                    src={getURL("cards/", card.name, ".jpeg")}
+                                    src={getURL(
+                                        "cards/",
+                                        card.name,
+                                        ".svg",
+                                        ".jpeg"
+                                    )}
                                     alt=""
                                 />
                             </li>

@@ -1,5 +1,5 @@
 import { HandCount } from "../../types";
-import cardback from "../../assets/images/cards/CardBack.svg";
+import cardback from "../../assets/images/cards/back.svg";
 import { getURL } from "../../utils";
 import { useEffect } from "react";
 
@@ -11,7 +11,7 @@ export function HandsComponent({ playersHands }: Props) {
     const user = localStorage.getItem("userId");
 
     return (
-        <div className="hands overlay">
+        <div className="hands flex-row">
             {playersHands.map(([player, { shown, hidden }], index) => (
                 <div className="player-tag">
                     <span>{player}</span>
@@ -33,6 +33,7 @@ export function HandsComponent({ playersHands }: Props) {
                                         src={getURL(
                                             "cards/",
                                             card.name,
+                                            ".svg",
                                             ".jpeg"
                                         )}
                                         alt=""

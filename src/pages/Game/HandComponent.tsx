@@ -1,5 +1,6 @@
 import { Card } from "../../types";
 import { getURL } from "../../utils";
+import bomb from "../../assets/images/cards/explodingkitten.svg";
 
 type Props = {
     hand: Card[];
@@ -55,11 +56,17 @@ export function HandComponent({
                         onClick={() => handlePlayCard(c, i)}
                     >
                         <img
-                            src={getURL("cards/", c.name, ".jpeg")}
+                            src={getURL("cards/", c.name, ".svg", ".jpeg")}
                             alt=""
                             className={"recipe-face"}
                             draggable="false"
                         />
+                        {/* <img
+                            src={bomb}
+                            alt=""
+                            className={"recipe-face"}
+                            draggable="false"
+                        /> */}
                     </div>
                 );
             })}

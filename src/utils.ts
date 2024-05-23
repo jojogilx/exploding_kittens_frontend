@@ -1,5 +1,11 @@
-export const getURL = (path: string, name: string, extension: string) => {
+export const getURL = (path: string, name: string, extension: string, extension2?: string) => {
 
-  return require("./assets/images/" + path + name.toLocaleLowerCase().split(" ").join("").trim() + extension
-  )
+  const filePath = "./assets/images/" + path + name.toLocaleLowerCase().split(" ").join("");
+
+  try {
+    return require(`${filePath + extension}`);
+  } catch (err) {
+    return require(`${filePath + extension2}`);
+  }
+
 };

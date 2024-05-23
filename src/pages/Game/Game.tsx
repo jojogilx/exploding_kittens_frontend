@@ -136,8 +136,12 @@ export function Game() {
                     break;
                 case "draw_card":
                     const card = event.card as Card;
+
+                    setTimeout(() => {
+                        setDrawnCard(null);
+                    }, 3000);
                     setDrawnCard(card);
-                    setHand([...hand, card]);
+
                     //trigger exploding overlay TODO
                     break;
                 case "play_card":
@@ -219,59 +223,35 @@ export function Game() {
 
     return (
         <div className="game-container">
-            <div className="side-game flex-column">
-                <div>
-                    <h4>Players</h4>
-                    <div>
-                        {playersSeatings?.length ? (
-                            <ul className="">
-                                {playersSeatings.map(({ playerID }) => (
-                                    <div className="player-display">
-                                        {playerID}
-                                    </div>
-                                ))}
-                            </ul>
-                        ) : (
-                            <div>No players </div>
-                        )}
-                    </div>
+            {drawnCard && (
+                <div className="shadow overlay middle" id="drawn-card-shadow">
+                    <h3>DRAWN CARD</h3>
+                    <img
+                        src={getURL("cards/", drawnCard!.name, ".svg", ".jpeg")}
+                        alt=""
+                        className="card-drawn"
+                        draggable="false"
+                    />
                 </div>
-                <div className="flex-column">
-                    <h4>Recipe Details</h4>
-                    {recipe ? (
-                        <img
-                            id="recipe-card"
-                            src={getURL("recipes/", recipe!.name, ".png")}
-                            alt=""
-                            draggable="false"
-                        />
-                    ) : (
-                        <></>
-                    )}
+            )}
 
-                    {drawnCard && (
-                        <div className="shadow overlay middle">
-                            <div>
-                                <h4>DRAWN CARD:</h4>
-                                <img
-                                    src={getURL(
-                                        "cards/",
-                                        drawnCard!.name,
-                                        ".jpeg"
-                                    )}
-                                    alt=""
-                                    className="card-drawn"
-                                    draggable="false"
-                                />
-                            </div>
-                        </div>
-                    )}
+            <div className="game">
+                <PromptComponent
+                    prompt={prompt}
+                    submitPrompt={handleSubmitPrompt}
+                />
+                <div id="game-header">
+                    <p>
+                        <strong>Recipe: </strong>
+                        {recipe?.name}
+                    </p>
+                    <p>{info}</p>
                 </div>
-
-                <div>
+                <div className="table-seatings overlay middle">
                     {!isStarted ? (
                         <button
                             className="flame-button"
+                            id="start-button"
                             onClick={() => handleStart()}
                         >
                             START GAME
@@ -279,48 +259,49 @@ export function Game() {
                     ) : (
                         <></>
                     )}
-                </div>
-            </div>
-
-            <div className="game">
-                <PromptComponent
-                    prompt={prompt}
-                    submitPrompt={handleSubmitPrompt}
-                />
-                <div className="game-header">
-                    <p>{info}</p>
-                </div>
-                <div className="table-seatings overlay middle">
                     <PilesComponent
                         drawDeck={deckLength}
                         lastPlayedCard={lastPlayedCard}
                     />
-                    <img src={tableImage} alt="" id="table" draggable="false" />
+
                     {playersSeatings.map(({ playerID, seat }) => {
                         return (
                             <div
-                                className="seat"
-                                id={"seat" + seat}
-                                key={"seat" + seat}
+                                className="seat-wrapper"
+                                style={
+                                    {
+                                        "--seatIndex": seat,
+                                        "--numberPlayers":
+                                            playersSeatings.length,
+                                    } as React.CSSProperties
+                                }
                             >
-                                <img
-                                    src={seatImage}
-                                    className="seat-image"
-                                    draggable="false"
-                                />
                                 <div
-                                    className={
-                                        "tag " +
-                                        (currentPlayer === playerID
-                                            ? "current-player"
-                                            : "")
-                                    }
+                                    className="seat"
+                                    id={"seat" + seat}
+                                    key={"seat" + seat}
                                 >
-                                    {playerID}
+                                    <img
+                                        src={seatImage}
+                                        className="seat-image"
+                                        draggable="false"
+                                    />
+
+                                    <div
+                                        className={
+                                            "tag " +
+                                            (currentPlayer === playerID
+                                                ? "current-player"
+                                                : "")
+                                        }
+                                    >
+                                        {playerID}
+                                    </div>
                                 </div>
                             </div>
                         );
                     })}
+                    <img src={tableImage} alt="" id="table" draggable="false" />
                     <HandsComponent playersHands={playersHands} />
                 </div>
 
