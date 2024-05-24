@@ -1,6 +1,6 @@
 import cardback from "../../assets/images/cards/back.svg";
 import { getURL } from "../../utils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "../../types";
 
 type Props = {
@@ -17,6 +17,10 @@ export function PilesComponent({
     currentPlayer,
 }: Props) {
     const user = localStorage.getItem("userId");
+
+    const [lastPlayed, setLastPlayed] = useState<Card | null>(null);
+
+    const [nowPlayed, setNowPlayed] = useState<Card | null>(null);
 
     const handlePass = () => {
         if (user !== currentPlayer) return;

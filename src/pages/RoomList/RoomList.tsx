@@ -157,7 +157,7 @@ export const RoomList = () => {
                     {recipe ? (
                         <div className="flex-row">
                             <div className="bold">Recipe: </div>
-                            {recipe?.name}
+                            <div id="recipe-name">{recipe?.name}</div>
                         </div>
                     ) : (
                         <></>

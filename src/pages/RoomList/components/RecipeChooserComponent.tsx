@@ -76,9 +76,9 @@ export const RecipeChooserComponent = ({
     };
 
     return (
-        <div className="container">
+        <div className="recipe-container">
             {error && <div className="error">{error}</div>}
-            <h2 className="bold">
+            <h2 className="bold" id="choose-title">
                 <img
                     src={closeIcon}
                     alt="close"
@@ -91,45 +91,49 @@ export const RecipeChooserComponent = ({
             </h2>
 
             {recipeList?.length && (
-                <Carousel responsive={responsive} className="carrousel">
-                    {recipeList.map((r) => (
-                        <div
-                            key={r.name}
-                            className={
-                                "fit " + (recipe?.name === r.name ? "glow" : "")
-                            }
-                        >
+                <div className="c-wrap">
+                    <Carousel responsive={responsive} className="carrousel">
+                        {recipeList.map((r) => (
                             <div
-                                className={"recipe-card"}
-                                onClick={() => {
-                                    handleRecipeChoose(r);
-                                }}
+                                key={r.name}
+                                className={
+                                    "fit " +
+                                    (recipe?.name === r.name ? "glow" : "")
+                                }
                             >
-                                <img
-                                    src={getURL("recipes/", r.name, ".png")}
-                                    alt=""
-                                    className={
-                                        "recipe-face " +
-                                        (r.available ? "pointer" : "grey")
-                                    }
-                                    draggable="false"
-                                />
+                                <div
+                                    className={"recipe-card"}
+                                    onClick={() => {
+                                        handleRecipeChoose(r);
+                                    }}
+                                >
+                                    <img
+                                        src={getURL("recipes/", r.name, ".png")}
+                                        alt=""
+                                        className={
+                                            "recipe-face " +
+                                            (r.available ? "pointer" : "grey")
+                                        }
+                                        draggable="false"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </Carousel>
+                        ))}
+                    </Carousel>
+                </div>
             )}
             <div className="ingredients-card">
                 {recipe ? (
                     <div className="ingredients">
                         {recipe.cards.map(([card, num]) => (
-                            <div>
-                                {num} x {card.name}
+                            <div className="ing">
+                                <div>{card.name}</div>
+                                <div className="count">{num}</div>
                             </div>
                         ))}
                     </div>
                 ) : (
-                    <div className="ingredients">
+                    <div className="no-ingredients">
                         Click on a recipe to show ingredients
                     </div>
                 )}

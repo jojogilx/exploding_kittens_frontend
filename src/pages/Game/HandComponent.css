@@ -1,5 +1,6 @@
 .hand-column .card{
     margin-top: -200px;
+    
 }
   
 
@@ -14,7 +15,7 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  background: linear-gradient(0deg, rgb(248, 248, 248), rgba(255, 255, 255, 0));
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.725), rgba(255, 255, 255, 0));
   height: 200px;
   width: 100%;
   gap: 0px;
@@ -26,16 +27,44 @@
 }
 
 .card { 
-
+  transition: width 0.2s ease-out;
   width: 80px;
+}
+
+
+.card img{ 
+  border-radius: 13px;
+}
+
+.played {
+  animation: play-card 0.4s ease-in 0s forwards;
+}
+
+@keyframes play-card {
+  0% {
+    margin-bottom: 0px;
+    opacity: 1;
+  }
+  100% {
+    margin-bottom: 250px;
+    opacity: 0;
+  }
 }
 
 
 
 .hand-column:hover .card{ 
-
+  transition: width 0.3s ease-out;
   width: 180px;
 }
+
+.hand-column:hover::after .card{ 
+  transition: width 0.1s ease-out;
+  width: 80px;
+}
+
+
+
 
 .can-play:hover {
   cursor: pointer;

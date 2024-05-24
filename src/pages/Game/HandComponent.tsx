@@ -23,6 +23,7 @@ export function HandComponent({
 }: Props) {
     const user = localStorage.getItem("userId");
     const [cards, setCards] = useState([] as Wrapper[][]);
+    const [playedCardIndex, setPlayedCardIndex] = useState(-1);
 
     const canPlay = (card: Card) => {
         return (
@@ -38,8 +39,12 @@ export function HandComponent({
 
         send(i.toString());
 
-        const cards = hand.filter((_, ind) => i !== ind);
-        setHand(cards);
+        setPlayedCardIndex(i);
+        setTimeout(() => {
+            setPlayedCardIndex(-1);
+        }, 1000);
+        // const cards = hand.filter((_, ind) => i !== ind);
+        //  setHand(cards);
     };
 
     useEffect(() => {
@@ -76,7 +81,10 @@ export function HandComponent({
                                             card.name.trim().toLowerCase() ==
                                                 "nope")
                                             ? " can-play"
-                                            : " cant-play")
+                                            : " cant-play") +
+                                        (playedCardIndex === index
+                                            ? " played"
+                                            : "")
                                     }
                                     onClick={() => handlePlayCard(card, index)}
                                 >
