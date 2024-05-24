@@ -2,6 +2,7 @@ import { Card, Wrapper } from "../../types";
 import { getURL } from "../../utils";
 import bomb from "../../assets/images/cards/explodingkitten.svg";
 import { useEffect, useState } from "react";
+import "./HandComponent.css";
 
 type Props = {
     hand: Card[];
@@ -9,6 +10,7 @@ type Props = {
     currentPlayer: string;
     send: (s: string) => void;
     noping: boolean;
+    playing: boolean;
 };
 
 export function HandComponent({
@@ -17,6 +19,7 @@ export function HandComponent({
     currentPlayer,
     setHand,
     noping,
+    playing,
 }: Props) {
     const user = localStorage.getItem("userId");
     const [cards, setCards] = useState([] as Wrapper[][]);
@@ -26,7 +29,7 @@ export function HandComponent({
             (noping &&
                 card.name.trim().toLowerCase() === "nope" &&
                 user !== currentPlayer) ||
-            user === currentPlayer
+            playing
         );
     };
 
@@ -58,55 +61,47 @@ export function HandComponent({
         setCards(result);
     }, [hand]);
 
-    const handleSkip = () => {
-        send("n");
-    };
-
     return (
-        <div id="hand-container" className="flex-row">
-            {cards.map((w) => (
-                <div className="flex-column" id="hand-column">
-                    {w.map(({ card, index }) => {
-                        return (
-                            <div
-                                className={
-                                    "card " +
-                                    (user === currentPlayer ||
-                                    (noping &&
-                                        card.name.trim().toLowerCase() ==
-                                            "nope")
-                                        ? ""
-                                        : " grey")
-                                }
-                                onClick={() => handlePlayCard(card, index)}
-                            >
-                                <img
-                                    src={getURL(
-                                        "cards/",
-                                        card.name,
-                                        ".svg",
-                                        ".jpeg"
-                                    )}
-                                    alt=""
-                                    className={"recipe-face"}
-                                    draggable="false"
-                                />
-                                {/* <img
+        <>
+            <div id="hand-container" className="flex-row">
+                {cards.map((w) => (
+                    <div className="flex-column hand-column">
+                        {w.map(({ card, index }) => {
+                            return (
+                                <div
+                                    className={
+                                        "card " +
+                                        (playing ||
+                                        (noping &&
+                                            card.name.trim().toLowerCase() ==
+                                                "nope")
+                                            ? " can-play"
+                                            : " cant-play")
+                                    }
+                                    onClick={() => handlePlayCard(card, index)}
+                                >
+                                    <img
+                                        src={getURL(
+                                            "cards/",
+                                            card.name,
+                                            ".svg",
+                                            ".jpeg"
+                                        )}
+                                        alt=""
+                                        draggable="false"
+                                    />
+                                    {/* <img
                             src={bomb}
                             alt=""
                             className={"recipe-face"}
                             draggable="false"
                         /> */}
-                            </div>
-                        );
-                    })}
-                </div>
-            ))}
-            {user === currentPlayer ? (
-                <button onClick={() => handleSkip()}>Skip</button>
-            ) : (
-                <></>
-            )}
-        </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                ))}
+            </div>
+        </>
     );
 }

@@ -53,6 +53,7 @@ export type RoomEvent =
   | { event: "see_the_future"; cards: Card[] }
   | { event: "nope_card"; cards: Card[] }
   | { event: "end_nope"; cards: Card[] }
+  | { event: "playing"; playing: boolean }
   ;
 
 

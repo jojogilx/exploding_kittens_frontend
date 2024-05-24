@@ -95,7 +95,7 @@ export const RoomList = () => {
             .then((_) => {
                 console.log("Room created successfully");
                 setPopupCreateShown(false);
-                /*handleJoinRoom(roomName)*/
+                handleJoinRoom(roomName);
             })
             .catch((error) => {
                 console.error("Error creating room:", error);

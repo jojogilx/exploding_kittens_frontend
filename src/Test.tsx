@@ -3,8 +3,6 @@ import { PromptComponent } from "./pages/Game/PromptComponent";
 import { Card, Wrapper } from "./types";
 import { getURL } from "./utils";
 import { useEffect, useState } from "react";
-import { Draggable } from "react-drag-reorder";
-import { arrayMoveImmutable } from "array-move";
 import "./Test.css";
 export const Test = () => {
     const handJson =
@@ -33,9 +31,9 @@ export const Test = () => {
     }, []);
 
     return (
-        <div id="hand-container2" className="flex-row">
+        <div id="hand-container2">
             {cards.map((w) => (
-                <div className="flex-column" id="hand-column">
+                <div className="flex-column hand-column">
                     {w.map(({ card, index }) => {
                         return (
                             <div className="card">

@@ -7,9 +7,15 @@ type Props = {
     playersHands: [string, HandCount][];
     player: string;
     currentPlayer: string;
+    index: number;
 };
 
-export function HandsComponent({ playersHands, player, currentPlayer }: Props) {
+export function HandsComponent({
+    playersHands,
+    player,
+    currentPlayer,
+    index,
+}: Props) {
     const user = localStorage.getItem("userId");
     const [hand, setHand] = useState<HandCount | null>(null);
 
@@ -20,36 +26,50 @@ export function HandsComponent({ playersHands, player, currentPlayer }: Props) {
 
     return (
         <div
-            className={
-                "player-tag " +
-                (currentPlayer === player ? "current-player" : "")
+            className="tags-wrapper"
+            style={
+                {
+                    "--index": index,
+                    "--nPlayers": playersHands.length,
+                } as React.CSSProperties
             }
         >
-            <span>{player}</span>
+            <div
+                className={
+                    "player-tag " +
+                    (currentPlayer === player ? "current-player" : "")
+                }
+            >
+                <span>{player}</span>
 
-            {user !== player && hand && (
-                <ul key={`hand-${player}`} className="hand-player">
-                    {Array.from({ length: hand.hidden }).map((_) => (
-                        <li>
-                            <img src={cardback} alt="" className="card-hand" />
-                        </li>
-                    ))}
-                    {hand.shown.map((card) => (
-                        <li>
-                            <img
-                                src={getURL(
-                                    "cards/",
-                                    card.name,
-                                    ".svg",
-                                    ".jpeg"
-                                )}
-                                alt=""
-                                className="card-hand"
-                            />
-                        </li>
-                    ))}
-                </ul>
-            )}
+                {user !== player && hand && (
+                    <ul key={`hand-${player}`} className="hand-player">
+                        {Array.from({ length: hand.hidden }).map((_) => (
+                            <li>
+                                <img
+                                    src={cardback}
+                                    alt=""
+                                    className="card-hand"
+                                />
+                            </li>
+                        ))}
+                        {hand.shown.map((card) => (
+                            <li>
+                                <img
+                                    src={getURL(
+                                        "cards/",
+                                        card.name,
+                                        ".svg",
+                                        ".jpeg"
+                                    )}
+                                    alt=""
+                                    className="card-hand"
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
     );
 }

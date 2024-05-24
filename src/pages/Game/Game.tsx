@@ -186,6 +186,9 @@ export function Game() {
                 case "end_nope":
                     setNoping(false);
                     break;
+                case "playing":
+                    setCanPlay(event.playing);
+                    break;
                 default:
                     break;
             }
@@ -197,6 +200,12 @@ export function Game() {
     const notifyBackendOnUnload = () => {
         sendMessage("left");
     };
+
+    useEffect(() => {
+        if (error) {
+            window.alert(error);
+        }
+    }, [error]);
 
     const handleStart = () => {
         const url = "http://127.0.0.1:8080/start/" + roomName?.trim();
@@ -240,13 +249,24 @@ export function Game() {
                     submitPrompt={handleSubmitPrompt}
                 />
                 <div id="game-header">
-                    <span>
+                    <div>
                         <strong>Recipe: </strong>
                         {recipe?.name}
-                    </span>
-                    <span>{info}</span>
+                    </div>
+                    <div id="information">{info}</div>
                 </div>
                 <div className="table-seatings overlay middle">
+                    {playersSeatings.map(({ playerID, seat }) => {
+                        return (
+                            <HandsComponent
+                                playersHands={playersHands}
+                                player={playerID}
+                                currentPlayer={currentPlayer}
+                                index={seat}
+                            />
+                        );
+                    })}
+
                     {!isStarted ? (
                         <button
                             className="flame-button"
@@ -259,8 +279,10 @@ export function Game() {
                         <></>
                     )}
                     <PilesComponent
+                        sendMessage={sendMessage}
                         drawDeck={deckLength}
                         lastPlayedCard={lastPlayedCard}
+                        currentPlayer={currentPlayer}
                     />
 
                     {playersSeatings.map(({ playerID, seat }) => {
@@ -285,12 +307,6 @@ export function Game() {
                                         className="seat-image"
                                         draggable="false"
                                     />
-
-                                    <HandsComponent
-                                        playersHands={playersHands}
-                                        player={playerID}
-                                        currentPlayer={currentPlayer}
-                                    />
                                 </div>
                             </div>
                         );
@@ -304,6 +320,7 @@ export function Game() {
                     send={sendMessage}
                     currentPlayer={currentPlayer}
                     noping={noping}
+                    playing={canPlay}
                 />
             </div>
         </div>
