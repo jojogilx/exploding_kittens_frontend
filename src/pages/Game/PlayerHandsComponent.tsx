@@ -47,6 +47,7 @@ export function HandsComponent({
                         {Array.from({ length: hand.hidden }).map((_) => (
                             <li>
                                 <img
+                                    draggable="false"
                                     src={cardback}
                                     alt=""
                                     className="card-hand"

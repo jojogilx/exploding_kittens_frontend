@@ -110,7 +110,7 @@ export function Game() {
                 case "information":
                     setTimeout(() => {
                         setInfo("");
-                    }, 3000);
+                    }, 2500);
                     setInfo(event.information);
                     break;
                 case "error":
@@ -128,7 +128,7 @@ export function Game() {
                     setTimeout(() => {
                         setDied("");
                         setOverlay(null);
-                    }, 3000);
+                    }, 2500);
                     setDied(event.player);
                     setOverlay(event);
 
@@ -148,9 +148,12 @@ export function Game() {
                     setTimeout(() => {
                         setDrawnCard(null);
                         setOverlay(null);
-                    }, 3000);
-                    setDrawnCard(card);
-                    setOverlay(event);
+                    }, 2500);
+
+                    setTimeout(() => {
+                        setDrawnCard(card);
+                        setOverlay(event);
+                    }, 500);
 
                     //trigger exploding overlay TODO
                     break;
@@ -174,7 +177,7 @@ export function Game() {
                     //todo trigger  cards overlay
                     setTimeout(() => {
                         setPrompt(null);
-                    }, 3000);
+                    }, 2500);
                     setPrompt(event);
                     break;
                 case "choose_card":

@@ -2,6 +2,7 @@ import { OverlayType } from "../../types";
 import { getURL } from "../../utils";
 import grave from "../../assets/images/grave.png";
 import win from "../../assets/images/winner.png";
+import cardBack from "../../assets/images/cards/back.svg";
 
 type Props = {
     overlay: OverlayType | null;
@@ -16,17 +17,30 @@ export function OverlayComponent({ overlay }: Props) {
                 return (
                     <>
                         <h3>DRAWN CARD</h3>
-                        <img
-                            src={getURL(
-                                "cards/",
-                                overlay.card.name,
-                                ".svg",
-                                ".jpeg"
-                            )}
-                            alt=""
-                            className="card-drawn"
-                            draggable="false"
-                        />
+
+                        <div className="card-drawn card-flip">
+                            <div id="back" className="card-back">
+                                <img
+                                    src={cardBack}
+                                    alt=""
+                                    className="card-drawn"
+                                    draggable="false"
+                                />
+                            </div>
+                            <div id="front" className="card-front">
+                                <img
+                                    src={getURL(
+                                        "cards/",
+                                        overlay.card.name,
+                                        ".svg",
+                                        ".jpeg"
+                                    )}
+                                    alt=""
+                                    className="card-drawn"
+                                    draggable="false"
+                                />
+                            </div>
+                        </div>
                     </>
                 );
 

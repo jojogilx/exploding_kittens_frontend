@@ -42,7 +42,7 @@ export function HandComponent({
         setPlayedCardIndex(i);
         setTimeout(() => {
             setPlayedCardIndex(-1);
-        }, 1000);
+        }, 5000);
         // const cards = hand.filter((_, ind) => i !== ind);
         //  setHand(cards);
     };

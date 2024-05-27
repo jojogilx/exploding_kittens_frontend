@@ -21,31 +21,65 @@ export function PilesComponent({
     const [lastPlayed, setLastPlayed] = useState<Card | null>(null);
 
     const [nowPlayed, setNowPlayed] = useState<Card | null>(null);
+    const [playedTiming, setPlayedTiming] = useState(false);
+    const [drawnTiming, setDrawnTiming] = useState(false);
 
     const handlePass = () => {
         if (user !== currentPlayer) return;
         sendMessage("n");
+
+        setDrawnTiming(true);
+        const timer = setTimeout(() => setDrawnTiming(false), 1000);
+        return () => clearTimeout(timer);
     };
+
+    useEffect(() => {
+        setLastPlayed(nowPlayed);
+        setNowPlayed(lastPlayedCard);
+        setPlayedTiming(true);
+        const timer = setTimeout(() => setPlayedTiming(false), 1000);
+        return () => clearTimeout(timer);
+    }, [lastPlayedCard]);
 
     return (
         <div className="decks">
+            <div className="overlayed">
+                {drawDeck > 1 && <img src={cardback} alt="" className="" />}
+                <div id="deck-length">{drawDeck}</div>
+            </div>
             {drawDeck > 0 && (
                 <div
                     id="draw-deck"
-                    className={user === currentPlayer ? "can-draw" : ""}
+                    className={
+                        "overlayed " +
+                        (user === currentPlayer ? " can-draw " : "") +
+                        (drawnTiming ? " drawn" : "")
+                    }
                     onClick={() => handlePass()}
                 >
-                    <div id="deck-length">{drawDeck}</div>
-                    <img src={cardback} alt="" />
+                    <img draggable="false" src={cardback} alt="" />
                 </div>
             )}
-            {lastPlayedCard && (
-                <img
-                    src={getURL("cards/", lastPlayedCard.name, ".svg", ".jpeg")}
-                    alt=""
-                    id="last-played"
-                />
-            )}
+            <div>
+                {lastPlayed && (
+                    <img
+                        draggable="false"
+                        className="overlayed"
+                        src={getURL("cards/", lastPlayed.name, ".svg", ".jpeg")}
+                        alt=""
+                    />
+                )}
+                {nowPlayed && (
+                    <img
+                        draggable="false"
+                        className={`overlayed ${
+                            playedTiming ? "played-card-deck" : ""
+                        }`}
+                        src={getURL("cards/", nowPlayed.name, ".svg", ".jpeg")}
+                        alt=""
+                    />
+                )}
+            </div>
         </div>
     );
 }

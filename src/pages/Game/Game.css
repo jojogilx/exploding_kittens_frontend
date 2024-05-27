@@ -71,7 +71,9 @@ position: relative;
 
 .card-drawn {
   width: 200px;
+  height: fit-content;
 }
+
 
 
 .center-available {
@@ -108,27 +110,31 @@ position: relative;
 
 .decks {
   position: absolute;
-  z-index: 3;
+  z-index: 5;
   top: 50%;
   left: 50%;
   display: flex;
   flex-direction: row;
   gap: 50px;
-  transform: translate(-50%,-50%);
+  transform: translate(-70%,-50%);
 
 }
 #draw-deck{
   position: relative;
+  
+}
+#draw-deck:hover{
+  box-shadow: 0px 0px 10px 4px rgba(236, 236, 236, 0.75);
+  cursor: pointer;
 }
 
 
-.can-draw:hover img{
-  box-shadow: 0px 0px 10px 4px rgba(236, 236, 236, 0.75);
+.can-draw:hover {
   border-radius: 4px;
-  cursor: pointer;
-
+ 
 
 } 
+
 .decks img{
   width: 80px;
   box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.75);
@@ -140,6 +146,7 @@ position: relative;
 #deck-length{
   position: absolute;
   left:50%;
+  z-index: 10;
   top: -10px;
   padding: 4px;
   transform: translate(-50%,0);
@@ -219,4 +226,89 @@ position: relative;
   transform:  translate(-50%,-100%) rotate(calc(360deg / var(--nPlayers) * var(--index)));
   padding: 12px;
   border-radius: 8px;
+}
+
+
+.overlayed {
+  position: absolute;
+}
+
+.played-card-deck {
+  animation: played 0.4s ease-out 0s forwards;
+}
+
+@keyframes played {
+  0% {
+    top: -200px;
+    opacity: 0;
+  }
+  100% {
+    top: 0px;
+    opacity: 1;
+  }
+}
+
+
+
+.drawn {
+  animation: draw 0.4s ease-out 0s forwards;
+}
+
+@keyframes draw {
+  0% {
+    top: 0px;
+    opacity: 1;
+  }
+  100% {
+    top: 200px;
+    opacity: 0;
+  }
+}
+
+.card-flip {
+  position: relative;
+  top:-10%;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  position: absolute;
+  animation: rotate-backward 1s ease-in 0s forwards;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+
+
+@keyframes rotate-forward {
+  0% {
+    
+  transform: rotateY(180deg);
+  }
+  100% {
+    
+  transform: rotateY(0deg);
+  }
+}
+
+@keyframes rotate-backward {
+  0% {
+    
+  transform: rotateY(0deg);
+  }
+  100% {
+    
+  transform: rotateY(180deg);
+  }
+}
+
+
+
+.card-front {
+  transform: rotateY(0deg);
+  position: absolute;
+
+  animation: rotate-forward 1s ease-in 0s forwards;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
