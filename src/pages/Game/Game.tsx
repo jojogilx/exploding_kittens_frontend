@@ -19,6 +19,7 @@ import { PilesComponent } from "./PilesComponent";
 import { PromptComponent } from "./PromptComponent";
 import { HandComponent } from "./HandComponent";
 import { OverlayComponent } from "./OverlayComponent";
+import useSound from "../../useSound";
 
 export function Game() {
     const { roomName } = useParams();
@@ -80,9 +81,9 @@ export function Game() {
         }
     }, [readyState]);
 
-    // useEffect(() => {
-    //     window.alert(error);
-    // }, [error]);
+    const fuseSound = useSound("fuse.mp3");
+    const defuseSound = useSound("defuse.mp3");
+    const bombSound = useSound("explosion.mp3");
 
     useEffect(() => {
         try {
@@ -153,12 +154,32 @@ export function Game() {
                     setTimeout(() => {
                         setDrawnCard(card);
                         setOverlay(event);
-                    }, 500);
+                    }, 400);
+
+                    setTimeout(() => {
+                        if (
+                            card.name.toLowerCase().trim() ===
+                            "exploding kitten"
+                        ) {
+                            fuseSound.play();
+                        }
+                    }, 1000);
 
                     //trigger exploding overlay TODO
                     break;
                 case "play_card":
-                    setLastPlayedCard(event.card as Card);
+                    const cardP = event.card as Card;
+                    setLastPlayedCard(cardP);
+                    if (cardP.name.toLowerCase().trim() === "defuse") {
+                        defuseSound.play();
+                        fuseSound.stop();
+                    }
+                    if (
+                        cardP.name.toLowerCase().trim() === "exploding kitten"
+                    ) {
+                        fuseSound.stop();
+                        bombSound.play();
+                    }
                     // trigger defuse animation
                     break;
                 case "target_player":

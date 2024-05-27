@@ -3,6 +3,7 @@ import { getURL } from "../../utils";
 import grave from "../../assets/images/grave.png";
 import win from "../../assets/images/winner.png";
 import cardBack from "../../assets/images/cards/back.svg";
+import useSound from "../../useSound";
 
 type Props = {
     overlay: OverlayType | null;
@@ -10,6 +11,8 @@ type Props = {
 
 export function OverlayComponent({ overlay }: Props) {
     const user = localStorage.getItem("userId");
+
+    const yaySound = useSound("yay.mp3");
 
     function getBody() {
         switch (overlay?.event) {
@@ -67,6 +70,10 @@ export function OverlayComponent({ overlay }: Props) {
                     </>
                 );
             case "winner":
+                if (overlay.player === user) {
+                    yaySound.play();
+                }
+
                 return overlay.player === user ? (
                     <>
                         <h1>YOU WON!</h1>

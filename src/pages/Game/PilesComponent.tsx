@@ -2,7 +2,7 @@ import cardback from "../../assets/images/cards/back.svg";
 import { getURL } from "../../utils";
 import { useEffect, useState } from "react";
 import { Card } from "../../types";
-
+import useSound from "../../useSound";
 type Props = {
     drawDeck: number;
     lastPlayedCard: Card | null;
@@ -18,6 +18,8 @@ export function PilesComponent({
 }: Props) {
     const user = localStorage.getItem("userId");
 
+    const cardDrawSound = useSound("drawCard.mp3");
+
     const [lastPlayed, setLastPlayed] = useState<Card | null>(null);
 
     const [nowPlayed, setNowPlayed] = useState<Card | null>(null);
@@ -26,6 +28,7 @@ export function PilesComponent({
 
     const handlePass = () => {
         if (user !== currentPlayer) return;
+        cardDrawSound.play();
         sendMessage("n");
 
         setDrawnTiming(true);
