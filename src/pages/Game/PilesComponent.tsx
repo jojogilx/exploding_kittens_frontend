@@ -19,6 +19,7 @@ export function PilesComponent({
     const user = localStorage.getItem("userId");
 
     const cardDrawSound = useSound("drawCard.mp3");
+    const playSound = useSound("playCard.mp3");
 
     const [lastPlayed, setLastPlayed] = useState<Card | null>(null);
 
@@ -37,6 +38,7 @@ export function PilesComponent({
     };
 
     useEffect(() => {
+        if (lastPlayedCard !== null) playSound.play();
         setLastPlayed(nowPlayed);
         setNowPlayed(lastPlayedCard);
         setPlayedTiming(true);
