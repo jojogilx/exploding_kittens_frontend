@@ -53,13 +53,6 @@ export function PromptComponent({ prompt, submitPrompt }: Props) {
         setAnswer(positions);
     };
 
-    useEffect(() => {
-        console.log(
-            "next cards are ",
-            nextcards.map((a) => a.card.name)
-        );
-    }, [nextcards]);
-
     const DraggableRender = useCallback(() => {
         return (
             <>
@@ -149,7 +142,29 @@ export function PromptComponent({ prompt, submitPrompt }: Props) {
                         </button>
                     </div>
                 );
-            case "choose_card" || "garbage_collection":
+            case "choose_card":
+                return (
+                    <ul className="flex-row wrap">
+                        {prompt.cards.map((card, index) => (
+                            <li
+                                key={index}
+                                className={`next-cards`}
+                                onClick={() => submitPrompt(index.toString())}
+                            >
+                                <img
+                                    src={getURL(
+                                        "cards/",
+                                        card.name,
+                                        ".svg",
+                                        ".jpeg"
+                                    )}
+                                    alt=""
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                );
+            case "garbage_collection":
                 return (
                     <ul className="flex-row wrap">
                         {prompt.cards.map((card, index) => (

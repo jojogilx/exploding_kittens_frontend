@@ -13,8 +13,9 @@
   border-radius: 10px;
 }
 
-.recipe-card {
-  width: 320px;
+.recipe-card { 
+  height: min-content;
+  width: min-content;
 }
 
 .ingredients-card {
@@ -51,6 +52,7 @@
   gap: 8px;
   flex-grow: 1;
 }
+
 .ing {
   display: grid;
   grid-template-columns: 1fr 100px;
@@ -65,9 +67,24 @@
 .glow {
   margin-top: 20px;
   box-shadow: 0px 0px 20px 10px rgb(255, 153, 0);
-
+  animation: glow 1.5s infinite ease-in-out;
   border-radius: 30px;
 }
+
+@keyframes glow {
+  0% {
+      box-shadow: 0px 0px 20px 10px rgb(243, 202, 141);
+  }
+  50% {
+      
+  box-shadow: 0px 0px 20px 10px rgb(255, 153, 0);
+  }
+  100% {
+      box-shadow: 0px 0px 20px 10px rgb(243, 202, 141);
+  }
+}
+
+
 
 .fit {
   width: fit-content;
@@ -83,6 +100,7 @@
   margin: 12px;
 }
 
-#choose-title{
+#choose-title {
   margin-left: 12px;
 }
+

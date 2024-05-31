@@ -77,8 +77,7 @@ h3 {
 }
 
 .button:hover {
-  background: #ae3333;
-  background-image: linear-gradient(to bottom, #7c2929, #6d1d1d);
+  filter: brightness(0.7);
 }
 
 .link {

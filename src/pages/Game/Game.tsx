@@ -34,6 +34,8 @@ export function Game() {
     const [prompt, setPrompt] = useState<null | PromptType>(null);
     const [overlay, setOverlay] = useState<null | OverlayType>(null);
 
+    const [playedCardIndex, setPlayedCardIndex] = useState(-1);
+
     const [currentPlayer, setCurrentPlayer] = useState("");
     const [info, setInfo] = useState("");
     const [error, setError] = useState("");
@@ -280,16 +282,17 @@ export function Game() {
                     <div id="information">{info}</div>
                 </div>
                 <div className="table-seatings overlay middle">
-                    {playersSeatings.map(({ playerID, seat }) => {
-                        return (
-                            <HandsComponent
-                                playersHands={playersHands}
-                                player={playerID}
-                                currentPlayer={currentPlayer}
-                                index={seat}
-                            />
-                        );
-                    })}
+                    {isStarted &&
+                        playersSeatings.map(({ playerID, seat }) => {
+                            return (
+                                <HandsComponent
+                                    playersHands={playersHands}
+                                    player={playerID}
+                                    currentPlayer={currentPlayer}
+                                    index={seat}
+                                />
+                            );
+                        })}
 
                     {!isStarted ? (
                         <button

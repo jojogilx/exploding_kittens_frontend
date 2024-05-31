@@ -14,7 +14,6 @@ const useSound = (fileName: string) => {
         audioElement.preload = 'auto';
 
         const handleCanPlayThrough = () => {
-            console.log(`Audio loaded: ${src}`);
             soundRef.current = audioElement;
         };
 

@@ -23,7 +23,9 @@ export function HandComponent({
 }: Props) {
     const user = localStorage.getItem("userId");
     const [cards, setCards] = useState([] as Wrapper[][]);
-    const [playedCardIndex, setPlayedCardIndex] = useState(-1);
+    const [playedCards, setPlayedCards] = useState([] as number[]);
+    const [cardsToPlay, setCardsToPlay] = useState([] as Wrapper[]);
+    const [triggeredAnimation, setTriggeredAnimation] = useState(false);
 
     const canPlay = (card: Card) => {
         return (
@@ -34,18 +36,48 @@ export function HandComponent({
         );
     };
 
-    const handlePlayCard = (card: Card, i: number) => {
-        if (!canPlay(card)) return;
-
-        send(i.toString());
-
-        setPlayedCardIndex(i);
+    useEffect(() => {
         setTimeout(() => {
-            setPlayedCardIndex(-1);
-        }, 5000);
-        // const cards = hand.filter((_, ind) => i !== ind);
-        //  setHand(cards);
+            setCardsToPlay([]);
+            setTriggeredAnimation(false);
+        }, 1000);
+    }, [playing]);
+
+    useEffect(() => {
+        console.log("hand");
+        console.log(hand);
+        setPlayedCards([]);
+    }, [hand]);
+
+    const handlePlayCard = () => {
+        const message = cardsToPlay.map(({ index }) => index).join(",");
+        console.log(message);
+        send(message);
+        setPlayedCards(cardsToPlay.map(({ index }) => index));
+
+        setTriggeredAnimation(true);
+        setTimeout(() => {
+            setPlayedCards([]);
+        }, 1000);
     };
+
+    const handleClickCard = (wrapper: Wrapper) => {
+        if (!canPlay(wrapper.card)) return;
+
+        console.log(`clicked ${wrapper.index}`);
+
+        if (cardsToPlay.find((w) => w.index === wrapper.index)) {
+            setCardsToPlay([
+                ...cardsToPlay.filter((w) => w.index !== wrapper.index),
+            ]);
+        } else {
+            setCardsToPlay([...cardsToPlay, wrapper]);
+        }
+    };
+
+    useEffect(() => {
+        console.log(cardsToPlay);
+    }, [cardsToPlay]);
 
     useEffect(() => {
         console.log(JSON.stringify(hand));
@@ -68,9 +100,18 @@ export function HandComponent({
 
     return (
         <>
+            {cardsToPlay.length && (
+                <button
+                    className="flame-button"
+                    id="play-button"
+                    onClick={() => handlePlayCard()}
+                >
+                    PLAY CARDS
+                </button>
+            )}
             <div id="hand-container" className="flex-row">
-                {cards.map((w) => (
-                    <div className="flex-column hand-column">
+                {cards.map((w, ind) => (
+                    <div className="hand-column">
                         {w.map(({ card, index }) => {
                             return (
                                 <div
@@ -82,11 +123,18 @@ export function HandComponent({
                                                 "nope")
                                             ? " can-play"
                                             : " cant-play") +
-                                        (playedCardIndex === index
+                                        (playedCards.find((i) => i === index)
                                             ? " played"
+                                            : "") +
+                                        (cardsToPlay.find(
+                                            (w) => w.index === index
+                                        ) && !triggeredAnimation
+                                            ? " to-play"
                                             : "")
                                     }
-                                    onClick={() => handlePlayCard(card, index)}
+                                    onClick={() =>
+                                        handleClickCard({ card, index })
+                                    }
                                 >
                                     <img
                                         src={getURL(
@@ -99,11 +147,11 @@ export function HandComponent({
                                         draggable="false"
                                     />
                                     {/* <img
-                            src={bomb}
-                            alt=""
-                            className={"recipe-face"}
-                            draggable="false"
-                        /> */}
+                                    src={bomb}
+                                    alt=""
+                                    className={"recipe-face"}
+                                    draggable="false"
+                                /> */}
                                 </div>
                             );
                         })}

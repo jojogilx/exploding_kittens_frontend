@@ -7,6 +7,7 @@ import "react-multi-carousel/lib/styles.css";
 
 import closeIcon from "../../../assets/images/closeIcon.webp";
 import { getURL } from "../../../utils";
+import useSound from "../../../useSound";
 
 interface Props {
     recipe: Recipe | null;
@@ -21,6 +22,8 @@ export const RecipeChooserComponent = ({
 }: Props) => {
     const [recipeList, setRecipeList] = useState([] as Recipe[]);
     const [error, setError] = useState("");
+
+    const buttonClickSound = useSound("higherClick.mp3");
 
     const responsive = {
         superLargeDesktop: {
@@ -83,7 +86,10 @@ export const RecipeChooserComponent = ({
                     src={closeIcon}
                     alt="close"
                     className="icons-close clickable"
-                    onClick={goBack}
+                    onClick={() => {
+                        buttonClickSound.play();
+                        goBack();
+                    }}
                     id="close-recipe-chooser"
                     draggable="false"
                 />

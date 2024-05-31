@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import cat from "../../assets/images/catlighter.png";
 import scalaIcon from "../../assets/images/scalaIcoWhite.png";
 import reactIcon from "../../assets/images/reactico.svg";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { TryPing } from "../../App";
+import { ButtonWithSound } from "../../components/ButtonWithSound";
 
 //clicking on the start could explode the page
 
@@ -49,12 +50,13 @@ export const Home = () => {
                     Edition
                 </div>
             </div>
-            <button
+            <ButtonWithSound
                 className="start-button button"
                 onClick={() => handlePrompt()}
-            >
-                START
-            </button>
+                name="START"
+                soundName="tacClick.mp3"
+            />
+
             <img src={cat} id="cat-lighter" alt="" draggable="false" />
         </div>
     );

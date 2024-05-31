@@ -48,7 +48,7 @@ export type RoomEvent =
   | { event: "target_player"; players: string[] }
   | { event: "bury_card"; card?: Card; min: number; max: number }
   | { event: "choose_card"; cards: Card[] }
-  | { event: "garbage_collection" }
+  | { event: "garbage_collection"; cards: Card[] }
   | { event: "alter_the_future"; next_cards: Card[] }
   | { event: "see_the_future"; cards: Card[] }
   | { event: "nope_card"; cards: Card[] }
@@ -63,7 +63,7 @@ export type PromptType =
   | { event: "choose_card"; cards: Card[] }
   | { event: "alter_the_future"; next_cards: Card[] }
   | { event: "see_the_future"; cards: Card[] }
-  | { event: "garbage_collection" };
+  | { event: "garbage_collection"; cards: Card[] };
 
 export type OverlayType =
   | { event: "died"; player: string }

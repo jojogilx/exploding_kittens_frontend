@@ -8,6 +8,8 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 
 import { useNavigate } from "react-router-dom";
 import { RecipeChooserComponent } from "./components/RecipeChooserComponent";
+import { ButtonWithSound } from "../../components/ButtonWithSound";
+import useSound from "../../useSound";
 
 export const RoomList = () => {
     const navigate = useNavigate();
@@ -45,6 +47,8 @@ export const RoomList = () => {
     const [recipe, setRecipe] = useState<Recipe | null>(null);
     const [isChoosingRecipe, setIsChoosingRecipe] = useState(false);
     const [error, setError] = useState("");
+
+    const buttonClickSound = useSound("higherClick.mp3");
 
     const joinable = (r: Room) => {
         return r.started || r.players.length == r.recipe?.max_players;
@@ -135,6 +139,7 @@ export const RoomList = () => {
                         alt="close"
                         className="icons-close clickable"
                         onClick={() => {
+                            buttonClickSound.play();
                             setPopupCreateShown(false);
                             setError("");
                         }}
@@ -163,23 +168,22 @@ export const RoomList = () => {
                         <></>
                     )}
                     <div className="flex-row">
-                        <button
-                            className="flame-button  create-row"
+                        <ButtonWithSound
+                            className="flame-button create-row"
                             onClick={() => setIsChoosingRecipe(true)}
-                        >
-                            {recipe ? "CHANGE RECIPE" : "CHOOSE RECIPE"}
-                        </button>
+                            name={recipe ? "CHANGE RECIPE" : "CHOOSE RECIPE"}
+                            soundName="softerTacClick.mp3"
+                        />
 
-                        <button
+                        <ButtonWithSound
                             className="flame-button create-row"
                             disabled={recipe === null}
                             onClick={() => {
                                 handleCreateRoom();
-                                //   handleJoinRoom(roomName!);
                             }}
-                        >
-                            CREATE
-                        </button>
+                            name="CREATE"
+                            soundName="deeperClick.mp3"
+                        />
                     </div>
                     {error && <div className="error">{error}</div>}
                 </div>
@@ -195,15 +199,15 @@ export const RoomList = () => {
                         <span className="white-text bold head2">GAMES </span>
                         <span className="exploding-text bold">LIST</span>
                     </h2>
-                    <button
+                    <ButtonWithSound
                         className="button create-room-button"
                         id="create-room"
                         onClick={() => {
                             setPopupCreateShown(true);
                         }}
-                    >
-                        CREATE GAME
-                    </button>
+                        name="CREATE GAME"
+                        soundName="softerTacClick.mp3"
+                    />
                     <CreateRoomPopup />
                 </div>
 
@@ -243,25 +247,16 @@ export const RoomList = () => {
                                         </span>{" "}
                                         {r.players.toString()}
                                     </span>
-                                    <button
-                                        className="flame-button"
-                                        id="join-button"
-                                        onClick={() => {
-                                            handleResetRoom(r.name);
-                                        }}
-                                    >
-                                        RESET (DEV)
-                                    </button>
-                                    <button
+                                    <ButtonWithSound
                                         className="flame-button"
                                         id="join-button"
                                         disabled={joinable(r)}
                                         onClick={() => {
                                             handleJoinRoom(r.name);
                                         }}
-                                    >
-                                        JOIN ROOM
-                                    </button>
+                                        name="JOIN ROOM"
+                                        soundName="deeperClick.mp3"
+                                    />
                                 </li>
                             ))}
                         </ul>
