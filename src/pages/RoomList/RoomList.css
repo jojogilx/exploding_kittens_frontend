@@ -31,8 +31,8 @@ body {
 .room {
   padding-top: 14px;
   padding-bottom: 14px;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 10% 20% 1fr 100px;
 }
 
 .rooms-list {

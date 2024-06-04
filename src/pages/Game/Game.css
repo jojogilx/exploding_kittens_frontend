@@ -217,7 +217,7 @@ position: relative;
   top: 0;
   left: 50%;
   background-color: #e0f9fd9c;
-  transform:  translate(-50%,-100%) rotate(calc(360deg / var(--nPlayers) * var(--index)));
+  transform:  translate(-50%,-100%) rotate(calc((360deg / var(--nPlayers) * var(--index))));
   padding: 12px;
   border-radius: 8px;
 }

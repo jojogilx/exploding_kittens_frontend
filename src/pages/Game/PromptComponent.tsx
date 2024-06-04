@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Card, PromptType, Wrapper } from "../../types";
 import { getURL } from "../../utils";
 import { Draggable } from "react-drag-reorder";
-import { arrayMoveImmutable } from "array-move";
 
 type Props = {
     prompt: PromptType | null;
@@ -30,7 +29,6 @@ export function PromptComponent({ prompt, submitPrompt }: Props) {
     useEffect(() => {
         setNextCards(cards);
         if (prompt?.event === "alter_the_future") {
-            console.log("here lol");
             const wrapped = prompt.next_cards.map(
                 (card, index) => ({ card: card, index } as Wrapper)
             );
@@ -38,18 +36,14 @@ export function PromptComponent({ prompt, submitPrompt }: Props) {
         }
     }, [prompt]);
 
-    useEffect(() => {
-        console.log("prompt", prompt);
-    }, [prompt]);
-
     const [answer, setAnswer] = useState("");
 
     const getChangedPos = (currentPos: number, newPos: number) => {
-        const newcards = arrayMoveImmutable(nextcards, currentPos, newPos);
-        setNextCards(newcards);
-        const positions = nextcards
-            .map(({ index }) => index.toString())
-            .join("");
+        const map = nextcards.filter((_, ind) => ind !== currentPos);
+        const elem = nextcards[currentPos];
+        map.splice(newPos, 0, elem);
+        setNextCards(map);
+        const positions = map.map(({ index }) => index.toString()).join("");
         setAnswer(positions);
     };
 

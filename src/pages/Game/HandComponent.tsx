@@ -1,6 +1,5 @@
 import { Card, Wrapper } from "../../types";
 import { getURL } from "../../utils";
-import bomb from "../../assets/images/cards/explodingkitten.svg";
 import { useEffect, useState } from "react";
 import "./HandComponent.css";
 
@@ -28,12 +27,7 @@ export function HandComponent({
     const [triggeredAnimation, setTriggeredAnimation] = useState(false);
 
     const canPlay = (card: Card) => {
-        return (
-            (noping &&
-                card.name.trim().toLowerCase() === "nope" &&
-                user !== currentPlayer) ||
-            playing
-        );
+        return (noping && card.name.trim().toLowerCase() === "nope") || playing;
     };
 
     useEffect(() => {
@@ -44,14 +38,11 @@ export function HandComponent({
     }, [playing]);
 
     useEffect(() => {
-        console.log("hand");
-        console.log(hand);
         setPlayedCards([]);
     }, [hand]);
 
     const handlePlayCard = () => {
         const message = cardsToPlay.map(({ index }) => index).join(",");
-        console.log(message);
         send(message);
         setPlayedCards(cardsToPlay.map(({ index }) => index));
 
@@ -64,7 +55,10 @@ export function HandComponent({
     const handleClickCard = (wrapper: Wrapper) => {
         if (!canPlay(wrapper.card)) return;
 
-        console.log(`clicked ${wrapper.index}`);
+        if (wrapper.card.name.toLowerCase().trim() === "nope") {
+            send(wrapper.index.toString());
+            return;
+        }
 
         if (cardsToPlay.find((w) => w.index === wrapper.index)) {
             setCardsToPlay([
@@ -76,11 +70,6 @@ export function HandComponent({
     };
 
     useEffect(() => {
-        console.log(cardsToPlay);
-    }, [cardsToPlay]);
-
-    useEffect(() => {
-        console.log(JSON.stringify(hand));
         const wrapped = hand.map(
             (card, index) => ({ card: card, index } as Wrapper)
         );
@@ -100,7 +89,7 @@ export function HandComponent({
 
     return (
         <>
-            {cardsToPlay.length && (
+            {cardsToPlay.length && playing && (
                 <button
                     className="flame-button"
                     id="play-button"
@@ -116,7 +105,6 @@ export function HandComponent({
                             return (
                                 <div
                                     className={
-                                        "card " +
                                         (playing ||
                                         (noping &&
                                             card.name.trim().toLowerCase() ==
@@ -130,7 +118,8 @@ export function HandComponent({
                                             (w) => w.index === index
                                         ) && !triggeredAnimation
                                             ? " to-play"
-                                            : "")
+                                            : "") +
+                                        " card"
                                     }
                                     onClick={() =>
                                         handleClickCard({ card, index })

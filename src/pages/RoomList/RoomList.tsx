@@ -25,12 +25,6 @@ export const RoomList = () => {
     });
 
     useEffect(() => {
-        if (readyState === ReadyState.OPEN) {
-            console.log("conn");
-        }
-    }, [readyState]);
-
-    useEffect(() => {
         try {
             const jsonString = JSON.stringify(lastJsonMessage);
             const decodedRooms = JSON.parse(jsonString) as Room[];
@@ -215,7 +209,7 @@ export const RoomList = () => {
                     {roomList?.length > 0 ? (
                         <ul className="rooms-list bottom-border">
                             {roomList.map((r) => (
-                                <li className="room flex-row" key={r.name}>
+                                <li className="room " key={r.name}>
                                     <div className="flex-row">
                                         <div
                                             id="ball"

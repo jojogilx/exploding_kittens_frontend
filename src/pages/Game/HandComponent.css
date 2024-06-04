@@ -2,7 +2,10 @@
     margin-top: -200px;
     
 }
-  
+.cant-play{
+  filter: brightness(0.45);
+}
+
 
   
 .card img {
@@ -80,9 +83,6 @@
   margin: 8px;
 }
 
-.cant-play{
-  filter: brightness(0.45);
-}
 
 .card.to-play {
   

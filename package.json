@@ -10,7 +10,6 @@
     "@types/node": "^16.18.97",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
-    "array-move": "^4.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-drag-reorder": "^1.2.0",
@@ -18,11 +17,8 @@
     "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
     "react-use-websocket": "^4.8.1",
-    "react-virtual-drag-list": "^2.6.2",
     "reactjs-popup": "^2.0.6",
-    "serve": "^14.2.3",
     "typescript": "^4.9.5",
-    "use-sound": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

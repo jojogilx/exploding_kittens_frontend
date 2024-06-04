@@ -13,7 +13,6 @@ import "./Game.css";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import seatImage from "../../assets/images/Seat.svg";
 import tableImage from "../../assets/images/table.svg";
-import { getURL } from "../../utils";
 import { HandsComponent } from "./PlayerHandsComponent";
 import { PilesComponent } from "./PilesComponent";
 import { PromptComponent } from "./PromptComponent";
@@ -127,7 +126,6 @@ export function Game() {
                     setOverlay(event);
                     break;
                 case "died":
-                    // triggerOverlay(event.player); TODO
                     setTimeout(() => {
                         setDied("");
                         setOverlay(null);
@@ -249,9 +247,6 @@ export function Game() {
                     );
                 }
                 return response;
-            })
-            .then((_) => {
-                console.log("sent start");
             })
             .catch((error) => {
                 console.error("Error creating room:", error);
